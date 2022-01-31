@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Animaze</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="main.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Oxygen&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+
+    <div class="container-flow" id="app">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand"><i class="fab fa-autoprefixer"></i>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="admin.html">Admin</a>
+                    </li>
+
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </nav>
+
+
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Admin</li>
+            </ol>
+        </nav> <!-- Breadcrumbs END -->
+
+        <!-- Products table -->
+        <div class="container-flow">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                </thead>
+                <tbody v-for="product in products" v-bind:key="product.id">
+                    <tr>
+                        <th scope="row"> <button type="button" class="btn" data-toggle="modal"
+                                v-on:click="showProdInUpdateForm(product.id)">
+                                {{ product.id }}</button></th>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.description }}</td>
+                        <td>Price: {{ product.price }} SEK</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> <!-- Products table END -->
+
+
+        <!-- Update Modal -->
+        <div class="modal fade" id="updateModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formUpdate">
+                            <div class="form-group">
+                                <label for="Id">Id</label>
+                                <input type="text" class="form-control" name="updateId" id="updateId" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="Name">Name</label>
+                                <input type="text" class="form-control" name="updateName" id="updateName">
+                            </div>
+                            <div class="form-group">
+                                <label for="Description">Description</label>
+                                <input type="text" class="form-control" name="updateDescription" id="updateDescription">
+                            </div>
+                            <div class="form-group">
+                                <label for="Price">Price</label>
+                                <input type="number" class="form-control" name="updatePrice" id="updatePrice">
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-success float-right" value="Save changes"
+                                    v-on:click="updateProd">
+
+                                <button type="submit" class="btn btn-danger float-left"
+                                    v-on:click="deleteProd">Delete</button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- End update modal-->
+
+
+        <!-- Add Modal -->
+        <div class="modal fade" id="addModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add product</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="formAdd" v-on:submit.prevent>
+                            <div class="form-group">
+                                <label for="Name">Name</label>
+                                <input type="text" class="form-control" name="addName" id="addName">
+                            </div>
+                            <div class="form-group">
+                                <label for="Description">Description</label>
+                                <input type="text" class="form-control" name="addDescription" id="addDescription">
+                            </div>
+                            <div class="form-group">
+                                <label for="Price">Price</label>
+                                <input type="number" class="form-control" name="addPrice" id="addPrice">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Picture">Picture</label>
+                                <input type="file" class="form-control" name="addPic" id="addPic">
+                            </div>
+
+                            <button type="button" class="btn btn-dark float-left" data-dismiss="modal">Close</button>
+                            <input type="button" class="btn btn-success float-right" data-dismiss="Modal"
+                                value="Add product" v-on:click="addProd">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- Add modal END -->
+    </div>
+    <!--CONTAINER END-->
+
+
+    <!--jquery 3 slim version doesn't support Ajax-->
+    <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+        const vm = new Vue({
+            el: "#app",
+            data: {
+                products: []
+            },
+            //methods for crud operations
+            methods: {
+                //code that allows us to create modal to show product information that can be updated
+                showProdInUpdateForm(id) {
+                    $.ajax({
+                        url: '/api/products/' + id,
+                        type: 'GET',
+                        success: (product) => {
+                            $('#updateId').val(product.id);
+                            $('#updateName').val(product.name);
+                            $('#updateDescription').val(product.description);
+                            $('#updatePrice').val(product.price);
+                        }
+                    });
+                    $('#updateModal').modal('show');
+                },
+                //Add product
+                addProd() {
+                    var product = {
+                        name: $('#addName').val(),
+                        description: $('#addDescription').val(),
+                        price: $('#addPrice').val(),
+                        image: $('#addPic').val()
+                    }
+                    const fd = new FormData();
+                    const file = $('#addPic')[0].files;
+                    fd.append('file', file[0]);
+                    fd.append('name', product.name);
+                    fd.append('description', product.description);
+                    fd.append('price', product.price);
+                    $.ajax({
+                        url: '/api/products/',
+                        type: 'POST',
+                        contentType: false,
+                        data: fd,
+                        processData: false,
+                        success: () => {
+                            var self = this;
+                            $.getJSON("/api/products/", function (jsondata) {
+                                console.log(JSON.stringify(jsondata));
+                                self.products = jsondata;
+                                $('#addModal').modal('hide');
+                            });
+                        }
+                    });
+                },
+                //Delete products
+                deleteProd() {
+                    var product = {
+                        id: $('#updateModal').val()
+                    }
+                    $.ajax({
+                        url: '/api/products/' + product.id,
+                        type: 'DELETE',
+                        success: () => {
+                            var self = this;
+                            $.getJSON("/api/products/", function (jsondata) {
+                                console.log(JSON.stringify(jsondata));
+                                self.products = jsondata;
+                            });
+                        }
+                    });
+                },
+                updateProd() {
+                    var product = {
+                        name: $('#updateModal #updateName').val(),
+                        description: $('#updateModal #updateDescription').val(),
+                        price: $('#updateModal #updatePrice').val(),
+                        id: $('#updateModal #updateId').val(),
+                        image: $('#addPic').val()
+                    }
+                    $.ajax({
+                        url: '/api/products/' + product.id,
+                        type: 'PUT',
+                        data: product,
+                        success: () => {
+                            var self = this;
+                            $.getJSON("/api/products/", function (jsondata) {
+                                // console.log(JSON.stringify(jsondata))
+                                self.products = jsondata;
+                            });
+                        }
+                    });
+                    $('#updateModal').modal('hide');
+                },
+            },
+
+            mounted() {
+                var self = this;
+                $.getJSON("/api/products/", function (jsondata) {
+                    console.log(JSON.stringify(jsondata));
+                    self.products = jsondata;
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
